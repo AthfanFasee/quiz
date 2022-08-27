@@ -1,4 +1,4 @@
-This is a simple quiz app which takes a csv file of questions, answers (using a default csv file with few mathematical problems), 
+This is a simple cmd level quiz app which takes a csv file of questions, answers (using a default csv file with few mathematical problems), 
 and loop through it and ask questions and shows your score at the end.
 You can provide your preferred time limit in seconds and challenge yourself just as you want!!
 
