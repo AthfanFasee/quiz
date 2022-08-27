@@ -6,10 +6,13 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
+	// This flag is like something we provide in command line
 	csvFilename := flag.String("csv", "problems.csv", "a csv file in the formate of 'question,answer'")
+	timeLimit := flag.Int("limit", 30, "the time limit for the quiz in seconds")
 	flag.Parse()
 	
 	file, err := os.Open(*csvFilename)
@@ -24,17 +27,36 @@ func main() {
 	}
 	problems := parseLines(lines)
 	
+	// Getting timer ready
+	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
+
 	correct := 0
+
+	// This lable is to break the code in select case statement (this is used instead of return)
+	problemloop:
 	for i, p := range problems {
-		fmt.Printf("Problem #%d: %s = \n", i+1, p.q)
-		var answer string
-		fmt.Scanf("%s\n", &answer)
-		if answer == p.a {
-			correct ++
+		fmt.Printf("Problem #%d: %s = ", i+1, p.q)
+		answerChan := make(chan string)
+		// This is just a way to code a function and call it right there, plus we dont need a name for it
+		go func() {
+			var answer string
+			fmt.Scanf("%s\n", &answer)
+			answerChan <- answer
+		}()
+
+		select {
+		case <-timer.C:
+			fmt.Println()
+			break problemloop
+		case answer := <-answerChan:								
+			if answer == p.a {
+				correct ++
+			}
 		}
+		
 	}
 
-	fmt.Printf("You scored %d out of %d.\n", correct, len(problems))
+	fmt.Printf("\nYou scored %d out of %d.\n", correct, len(problems))
 }
 
 func parseLines(lines [][]string) ([]problem) {
