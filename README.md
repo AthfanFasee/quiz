@@ -3,6 +3,7 @@ and loop through it and ask questions and shows your score at the end.
 You can provide your preferred time limit in seconds and challenge yourself just as you want!!
 This simple app is made of go concurrency and doesn't use any third party dependencies.
 
+Default folder name is "quiz". If you wanna use any other folder name, replace the word "quiz" with your folder name in the below commands.
 Run command "./quiz -h" to get the format of csv file and available commands.
 
 Run the application by using the following commands.
