@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"strings"
 	"time"
@@ -13,8 +14,9 @@ func main() {
 	// This flag is like something we provide in command line
 	csvFilename := flag.String("csv", "problems.csv", "a csv file in the formate of 'question,answer'")
 	timeLimit := flag.Int("limit", 30, "the time limit for the quiz in seconds")
+	shuffle := flag.String("shuffle", "no", "Shuffle the questions randomly")
 	flag.Parse()
-	
+
 	file, err := os.Open(*csvFilename)
 	if err != nil {
 		exit(fmt.Sprintf("Failed to open the csv file: %s\n", *csvFilename))
@@ -27,6 +29,11 @@ func main() {
 	}
 	problems := parseLines(lines)
 	
+	// Suffle the problems order if needed
+	if *shuffle == "yes" {
+		Shuffle(problems)
+	}
+
 	// Getting timer ready
 	timer := time.NewTimer(time.Duration(*timeLimit) * time.Second)
 
@@ -37,6 +44,7 @@ func main() {
 	for i, p := range problems {
 		fmt.Printf("Problem #%d: %s = ", i+1, p.q)
 		answerChan := make(chan string)
+
 		// This is just a way to code a function and call it right there, plus we dont need a name for it
 		go func() {
 			var answer string
@@ -48,26 +56,34 @@ func main() {
 		case <-timer.C:
 			fmt.Println()
 			break problemloop
-		case answer := <-answerChan:								
-			if answer == p.a {
+		case answer := <-answerChan:
+			answer = strings.ReplaceAll(answer, " ", "")								
+			if strings.EqualFold(answer, p.a) {  // This will ignore case sensitive in strings
 				correct ++
 			}
-		}
-		
+		}	
 	}
-
 	fmt.Printf("\nYou scored %d out of %d.\n", correct, len(problems))
 }
-
+// Parse the 2d slice into a slice with problem struct
 func parseLines(lines [][]string) ([]problem) {
 	ret:= make([]problem, len(lines))
 	for i, line := range lines {
 		ret[i] = problem{
 			q: line[0],
-			a: strings.TrimSpace(line[1]),
+			a: strings.TrimSpace(line[1]), // trim whitespaces in csv file
 		}
 	}
 	return ret
+}
+
+// Suffle the parsedSlice
+func Shuffle(slice []problem) {
+	r := rand.New(rand.NewSource(time.Now().Unix()))
+	for n := len(slice); n > 0; n-- {
+	   randIndex := r.Intn(n)
+	   slice[n-1], slice[randIndex] = slice[randIndex], slice[n-1]
+	}
 }
 
 type problem struct {
