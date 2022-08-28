@@ -48,10 +48,9 @@ func main() {
 
 		// This is just a way to code a function and call it right there, plus we dont need a name for it
 		go func() {
-			var answer string
 			reader := bufio.NewReader(os.Stdin)
-			answer, _ = reader.ReadString('\n')
-			answerChan <- strings.TrimSpace(answer)
+			answer, _ := reader.ReadString('\n')
+			answerChan <- strings.TrimSpace(answer) // This will ignore case white spaces in answers
 		}()
 
 		select {
@@ -59,7 +58,7 @@ func main() {
 			fmt.Println()
 			break problemloop
 		case answer := <-answerChan:							
-			if strings.EqualFold(answer, p.a) {  // This will ignore case sensitive in strings
+			if strings.EqualFold(answer, p.a) {  // This will ignore case sensitive in answers
 				correct ++
 			}
 		}	
@@ -67,7 +66,7 @@ func main() {
 	fmt.Printf("\nYou scored %d out of %d.\n", correct, len(problems))
 }
 
-// Parse the 2d slice into a slice with problem struct
+// Parse the 2D slice into a slice with problem struct
 func parseLines(lines [][]string) ([]problem) {
 	ret:= make([]problem, len(lines))
 	for i, line := range lines {
@@ -79,7 +78,7 @@ func parseLines(lines [][]string) ([]problem) {
 	return ret
 }
 
-// Suffle the parsedSlice
+// Shuffle the parsedSlice
 func Shuffle(slice []problem) {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
 	for n := len(slice); n > 0; n-- {
