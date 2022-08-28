@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/csv"
 	"flag"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 )
 
 func main() {
-	// This flag is like something we provide in command line
+	// This flag is something we provide in command line
 	csvFilename := flag.String("csv", "problems.csv", "a csv file in the formate of 'question,answer'")
 	timeLimit := flag.Int("limit", 30, "the time limit for the quiz in seconds")
 	shuffle := flag.String("shuffle", "no", "Shuffle the questions randomly")
@@ -28,7 +29,7 @@ func main() {
 		exit("Failed to parse the csv file.")
 	}
 	problems := parseLines(lines)
-	
+	fmt.Println(problems)
 	// Suffle the problems order if needed
 	if *shuffle == "yes" {
 		Shuffle(problems)
@@ -48,16 +49,16 @@ func main() {
 		// This is just a way to code a function and call it right there, plus we dont need a name for it
 		go func() {
 			var answer string
-			fmt.Scanf("%s\n", &answer)
-			answerChan <- answer
+			reader := bufio.NewReader(os.Stdin)
+			answer, _ = reader.ReadString('\n')
+			answerChan <- strings.TrimSpace(answer)
 		}()
 
 		select {
 		case <-timer.C:
 			fmt.Println()
 			break problemloop
-		case answer := <-answerChan:
-			answer = strings.ReplaceAll(answer, " ", "")								
+		case answer := <-answerChan:							
 			if strings.EqualFold(answer, p.a) {  // This will ignore case sensitive in strings
 				correct ++
 			}
@@ -65,6 +66,7 @@ func main() {
 	}
 	fmt.Printf("\nYou scored %d out of %d.\n", correct, len(problems))
 }
+
 // Parse the 2d slice into a slice with problem struct
 func parseLines(lines [][]string) ([]problem) {
 	ret:= make([]problem, len(lines))
