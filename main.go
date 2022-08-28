@@ -29,7 +29,7 @@ func main() {
 		exit("Failed to parse the csv file.")
 	}
 	problems := parseLines(lines)
-	fmt.Println(problems)
+	
 	// Suffle the problems order if needed
 	if *shuffle == "yes" {
 		Shuffle(problems)
