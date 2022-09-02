@@ -12,5 +12,6 @@ Run the application by using the following commands.
 2. "go build ."
 3. "./quiz -limit=2 -shuffle="yes""
 
-If you wanna provide your own csv file (make sure it's in the correct format), copy it to the root folder and run the following command 
+If you wanna provide your own csv file (make sure it's in the correct format), copy it to the root folder and run the following command
+
 "./quiz csv="yourCsvFileName.csv"" 
