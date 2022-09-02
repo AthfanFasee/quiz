@@ -8,7 +8,9 @@ Run command "./quiz -h" to get the format of csv file and available commands.
 By default using "problems.csv", limt is off and shuffle is turned off
 
 Run the application by using the following commands.
-1. "go build ."
-2. "./quiz -limit=2 -shuffle="yes""
-3. If you wanna provide your own csv file (make sure it's in the correct format), copy it to the root folder and run the following command 
+1. "go mod tidy"
+2. "go build ."
+3. "./quiz -limit=2 -shuffle="yes""
+
+If you wanna provide your own csv file (make sure it's in the correct format), copy it to the root folder and run the following command 
 "./quiz csv="yourCsvFileName.csv"" 
