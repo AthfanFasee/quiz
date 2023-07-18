@@ -1,3 +1,4 @@
+# Quiz Game
 This is a simple cmd level quiz app which takes a csv file of questions, answers (using a default csv file with few mathematical problems), 
 and loop through it and ask questions and shows your score at the end.
 You can provide your preferred time limit in seconds, shuffle the questions and challenge yourself just as you want!!
@@ -7,7 +8,7 @@ Default folder name is "quiz". If you wanna use any other folder name, replace t
 Run command "./quiz -h" to get the format of csv file and available commands.
 By default using "problems.csv", limt is off and shuffle is turned off
 
-Run the application by using the following commands.
+## Run the application by using the following commands.
 1. "go mod tidy"
 2. "go build ."
 3. "./quiz -limit=2 -shuffle="yes""
